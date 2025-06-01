@@ -1,10 +1,25 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import Post from '.';
-import PostComment from '.';
+import { render, screen, fireEvent } from '@testing-library/react';
+import PostComments from '.';
 
-describe('Teste para o componente PostComment', () => {
-    it('Deve renderizar o componente corretamente', () => {
-        render(<PostComment/>);
-        expect(screen.getByText('Comentar')).toBeInTheDocument();
+describe('PostComments', () => {
+    it('Deve permitir adicionar dois comentários na lista', () => {
+        render(<PostComments />);
+
+        const textarea = screen.getByTestId('comment-textarea');
+        const button = screen.getByTestId('comment-button');
+
+        fireEvent.change(textarea, { target: { value: 'Primeiro comentário' } });
+        fireEvent.click(button);
+
+
+        fireEvent.change(textarea, { target: { value: 'Segundo comentário' } });
+        fireEvent.click(button);
+
+ 
+        const commentItems = screen.getAllByTestId('comment-item');
+        expect(commentItems).toHaveLength(2);
+
+        expect(commentItems[0]).toHaveTextContent('Primeiro comentário');
+        expect(commentItems[1]).toHaveTextContent('Segundo comentário');
     });
 });
